@@ -6,8 +6,8 @@ A [gallery-dl](https://github.com/mikf/gallery-dl) based tool for automatic twit
 
 TODO:
 
-- [] Handle pagination
-- [] User-friendly Interface
-- [] Frontend to display the downloaded tweets
-- [] Improve Robustness
-- [] Display total items (instead of total users) when downloading
+- [ ] Handle pagination
+- [ ] User-friendly Interface
+- [ ] Frontend to display the downloaded tweets
+- [ ] Improve Robustness
+- [ ] Display total items (instead of total users) when downloading
