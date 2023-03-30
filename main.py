@@ -2,11 +2,11 @@ import config
 import tweepy
 import subprocess
 import sys
-from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
 import schedule
 import time
 
-log = open('gallery.log', 'w')
+log = open(config.LOG_DIR, 'w')
 
 
 def get_list_members(list_id):
@@ -22,9 +22,10 @@ def get_list_name(l):
     return f"{l['name']}-{l['id']}"
 
 
-def exec_gallery(list_name, user):
-    name = user["username"]
-    id = user["id"]
+def exec_gallery(item):
+    list_name = item["listName"]
+    name = item["username"]
+    id = item["id"]
     path = f"{config.OUTPUT_DIR}/{list_name}/{id}"
     p = subprocess.Popen(
         f"gallery-dl -u '{config.MY_USER_NAME}' -p \
@@ -48,17 +49,21 @@ user_id = config.MY_ID
 
 def update():
     all_lists = get_lists(config.MY_ID)
+    seq = []
     for l in all_lists:
-        l2 = get_list_members(l["id"])
         name = get_list_name(l)
-        print(f"Now updating: {name}")
-        for i in tqdm(l2, total=len(l2)):
-            exec_gallery(name, i)
+        print(f"Now getting list: {name}")
+        l2 = [ { "id": i["id"], "username": i["username"], "listName": name } 
+               for i in get_list_members(l["id"]) ]
+        seq += l2
+    print(f"total need renew: {len(seq)}")
+    process_map(exec_gallery, seq, max_workers=config.MAX_WORKERS)
 
+
+# first run may cause massive downloading, take more than 2 hours
+update()
 
 schedule.every(2).hours.do(update)
-
-update()
 
 while True:
     schedule.run_pending()
