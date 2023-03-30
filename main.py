@@ -10,7 +10,13 @@ log = open(config.LOG_DIR, 'w')
 
 
 def get_list_members(list_id):
-    data = client.get_list_members(list_id, user_auth=True).data
+    data = []
+    res = None
+    while res is None or "next_token" in res.meta:
+        res = client.get_list_members(
+            list_id, user_auth=True, 
+            pagination_token=None if res is None else res.meta["next_token"])
+        data += res.data
     return data
 
 
