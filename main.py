@@ -18,6 +18,10 @@ def get_lists(id):
     return client.get_owned_lists(id, user_auth=True).data
 
 
+def get_list_name(l):
+    return f"{l['name']}-{l['id']}"
+
+
 def exec_gallery(list_name, user):
     name = user["username"]
     id = user["id"]
@@ -46,9 +50,10 @@ def update():
     all_lists = get_lists(config.MY_ID)
     for l in all_lists:
         l2 = get_list_members(l["id"])
-        print(f"Now updating: {l['name']}")
+        name = get_list_name(l)
+        print(f"Now updating: {name}")
         for i in tqdm(l2, total=len(l2)):
-            exec_gallery(l["name"], i)
+            exec_gallery(name, i)
 
 
 schedule.every(2).hours.do(update)
