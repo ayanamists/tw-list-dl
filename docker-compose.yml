@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  tw-list-dl:
+    build: "."
+    volumes:
+      - "/data/image-data/twitter-data-new:/data"
+      - "tw-list-dl-log:/log"
+    env_file:
+      - "env.env"
+
+volumes:
+  tw-list-dl-log:

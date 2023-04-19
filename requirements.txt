@@ -1,0 +1,7 @@
+tweepy
+
+gallery-dl
+
+tqdm
+
+schedule

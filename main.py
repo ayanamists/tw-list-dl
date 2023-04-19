@@ -6,7 +6,7 @@ from tqdm.contrib.concurrent import process_map
 import schedule
 import time
 
-log = open(config.LOG_DIR, 'w')
+log = open(config.LOG_DIR, 'w+')
 
 
 def get_list_members(list_id):
@@ -63,7 +63,7 @@ def update():
                for i in get_list_members(l["id"]) ]
         seq += l2
     print(f"total need renew: {len(seq)}")
-    process_map(exec_gallery, seq, max_workers=config.MAX_WORKERS)
+    process_map(exec_gallery, seq, max_workers=int(config.MAX_WORKERS))
 
 
 # first run may cause massive downloading, take more than 2 hours
